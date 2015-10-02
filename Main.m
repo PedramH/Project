@@ -1,17 +1,41 @@
-%version 0.1
+%Version 1.0
 
 clear all
 clc
 
 %Global variables 
-dt = 0.0001;
+dt = 0.001;
 etta = 5;
 detta = 0.05;
 %----------------
 C = 0.5;
-e1 = 1;
-e2 = 1;
-Pr = 1;
+phi = 0;		        %Solid volume fraction of the nanofluid 
+
+%------------------Base Fluid-----------------------
+
+pf = 997.1 ;			%Density 
+Kf  = 0.613 ;			%Thermal conductivity 
+pCpf = pf * 4179;		%Heat capacitance 
+%Vf = 0.8926e-06		%Kinematic viscosity (m2/s)
+Pr = 5.78 ;             %Prandtl number              
+%-----------------NanoParticle----------------------
+
+NanoParticle = 'Cu' ;
+ps =  8933 ;		    %Density  
+Ks = 400;				%Thermal conductivity 
+pCps = ps * 385;		%Heat capacitance   (Ï?*Cp) 
+
+%------------------NanoFluid------------------------
+
+Knf =( ((Ks+2*Kf)-2*phi*(Kf-Ks))/((Ks+2*Kf)+phi*(Kf-Ks)) ).*Kf;					%Thermal conductivity 
+pCpnf = (1-phi).*(pCpf) + phi .*(pCps) ; 										%Heat capacitance
+anf = Knf / pCpnf ; 															%Effective thermal diffusivity (Î±)
+
+%---------------------------------------------------
+
+e1 = 1/( ((1-phi).^(2.5)).*((1-phi) + phi.*(ps/pf)) );
+e2 = (Knf/Kf)/ ( (1-phi)+phi.*(pCps/pCpf) );   
+%Pr = Vf/anf 
 
 
 
@@ -197,7 +221,8 @@ for kdt = 1:1000   %main loop  --
    
 end
 time = toc
-save('Test1.mat')
 x=0:detta:etta-detta;
-% plot(x,F(:,k))
-% plot(x,W(:,k))
+%----------------Save Output Data---------------------------
+No = strrep(num2str(phi), '.', '_');
+name = sprintf('Data\\%s\\phi%s.mat',NanoParticle,No);
+save(name)

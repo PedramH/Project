@@ -1,17 +1,41 @@
-%version 0.1   (High Performance Version)
+%Version 1.0   (High Performance Version)
 
 clear all
 clc
 
 %Global variables 
-dt = 0.0001;
-etta = 5;
+dt = 0.0005;
+etta = 10;
 detta = 0.05;
 %----------------
 C = 0.5;
-e1 = 1;
-e2 = 1;
-Pr = 1;
+phi = 0.2;		        %Solid volume fraction of the nanofluid 
+
+%------------------Base Fluid-----------------------
+
+pf = 997.1 ;			%Density 
+Kf  = 0.613 ;			%Thermal conductivity 
+pCpf = pf * 4179;		%Heat capacitance 
+%Vf = 0.8926e-06;		%Kinematic viscosity (m2/s)
+Pr = 1 ;                %Prandtl number 5.78              
+%-----------------NanoParticle----------------------
+
+NanoParticle = 'Cu' ;
+ps =  8933 ;		    %Density  
+Ks = 400;				%Thermal conductivity 
+pCps = ps * 385;		%Heat capacitance   (د?*Cp) 
+
+%------------------NanoFluid------------------------
+
+Knf =( ((Ks+2*Kf)-2*phi*(Kf-Ks))/((Ks+2*Kf)+phi*(Kf-Ks)) ).*Kf;					%Thermal conductivity 
+pCpnf = (1-phi).*(pCpf) + phi .*(pCps) ; 										%Heat capacitance
+anf = Knf / pCpnf ; 															%Effective thermal diffusivity (خ±)
+
+%---------------------------------------------------
+
+e1 = 1/( ((1-phi).^(2.5)).*((1-phi) + phi.*(ps/pf)) );
+e2 = (Knf/Kf)/ ( (1-phi)+phi.*(pCps/pCpf) );   
+%Pr = Vf/anf; 
 
 
 
@@ -46,8 +70,11 @@ for kdt = 1:1000   %main loop  --
        
 	  
        
-           i= 2:n-1;  %K1
-           f(i)=f(i-1)+F(i,1).*detta; 
+           i= 2:n-1;  
+		   
+		   %K1
+           
+		   f(i)=f(i-1)+F(i,1).*detta; 
 		   g(i)=g(i-1)+G(i,1).*detta;
 		   
 		   
@@ -77,7 +104,7 @@ for kdt = 1:1000   %main loop  --
        
        
            %K2
-           % TODO
+           
            f(i)=f(i-1)+(F(i,1)+k1F(i).*0.5).*detta;
            g(i)=g(i-1)+(G(i,1)+k1G(i).*0.5).*detta;
 		  
@@ -105,7 +132,7 @@ for kdt = 1:1000   %main loop  --
        
     
            %K3
-           % TODO
+           
            f(i)=f(i-1)+(F(i,1)+k2F(i).*0.5).*detta;
            g(i)=g(i-1)+(G(i,1)+k2G(i).*0.5).*detta;
 		  
@@ -131,8 +158,8 @@ for kdt = 1:1000   %main loop  --
        
 
        
-        %K4
-           % TODO
+           %K4
+           
            f(i)=f(i-1)+(F(i,1)+k3F(i).*1).*detta;
            g(i)=g(i-1)+(G(i,1)+k3G(i).*1).*detta;
 		  
@@ -154,7 +181,7 @@ for kdt = 1:1000   %main loop  --
        
        
        
-	   %Caclulate F,W in t=t+dt
+	       %Caclulate F,G,W in t=t+dt
        
            F(i,2)=F(i,1)+(1./6).*(k1F(i)+2.*k2F(i)+2.*k3F(i)+k4F(i));
 		   G(i,2)=G(i,1)+(1./6).*(k1G(i)+2.*k2G(i)+2.*k3G(i)+k4G(i));
@@ -196,7 +223,8 @@ for kdt = 1:1000   %main loop  --
    
 end
 time = toc
-save('HP.mat')
 x=0:detta:etta-detta;
-% plot(x,F(:,k))
-% plot(x,W(:,k))
+%----------------Save Output Data---------------------------
+No = strrep(num2str(phi), '.', '_');
+name = sprintf('Data\\%s\\phi%s.mat',NanoParticle,No);
+save(name)
