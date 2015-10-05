@@ -1,23 +1,23 @@
-%Version 1.0   (High Performance)
+%Version 1.3   (High Performance)
 
 clear all
 clc
 
 %Global variables 
 dt = 0.001;
-etta = 9;
+etta = 5;
 detta = 0.05;
 %----------------
 C = 0.5;
-phi = 0.2;		        %Solid volume fraction of the nanofluid 
+phi = 0;		        %Solid volume fraction of the nanofluid 
 
 %------------------Base Fluid-----------------------
 
 pf = 997.1 ;			%Density 
 Kf  = 0.613 ;			%Thermal conductivity 
 pCpf = pf * 4179;		%Heat capacitance 
-%Vf = 0.8926e-06;		%Kinematic viscosity (m2/s)
-Pr = 1 ;                %Prandtl number 5.78              
+Vf = 0.8926e-06;		%Kinematic viscosity (m2/s)
+Pr = 5.64 ;                %Prandtl number 5.78              
 %-----------------NanoParticle----------------------
 
 NanoParticle = 'Cu' ;		%Valid names : Cu  Al2O3  TiO2 
@@ -41,6 +41,11 @@ switch (NanoParticle)
 
 end
 
+dphi = 0.01;   
+MAXphi = 0.21;
+while (phi <= MAXphi)
+
+
 %------------------NanoFluid------------------------
 
 Knf =( ((Ks+2*Kf)-2*phi*(Kf-Ks))/((Ks+2*Kf)+phi*(Kf-Ks)) ).*Kf;					%Thermal conductivity 
@@ -51,7 +56,8 @@ anf = Knf / pCpnf ; 															%Effective thermal diffusivity
 
 e1 = 1/( ((1-phi).^(2.5)).*((1-phi) + phi.*(ps/pf)) );
 e2 = (Knf/Kf)/ ( (1-phi)+phi.*(pCps/pCpf) );   
-%Pr = Vf/anf; 
+%Pr = Vf/anf;
+
 
 
 
@@ -69,7 +75,9 @@ for kdt = 1:1000   %main loop  --
     f = zeros(n,1);
 	g = zeros(n,1);
     
-    nt = 1000000000000;  %No. of iterations
+	Fr = zeros(n,50);Gr = zeros(n,50); Wr = zeros(n,50);  j=1;  %for saving unsteady values.
+    
+	nt = 1000000000000;  %No. of iterations
    
     % K initialization
     k1F = zeros(n,1); k2F = zeros(n,1); k3F = zeros(n,1); k4F = zeros(n,1);
@@ -204,9 +212,6 @@ for kdt = 1:1000   %main loop  --
            W(i,2)=W(i,1)+(1./6).*(k1W(i)+2.*k2W(i)+2.*k3W(i)+k4W(i));
        
        
-       % B.C   
-       % F(1,2) = 1; G(1,2) = C; W(1,2) = 1;
-       % F(n,2) = 0; G(n,2) = 0; W(n,2) = 0;
        
        NomF = norm((F(:,1)-F(:,2)))/norm(F(:,1))
        if  NomF < 1e-7 && k > 2000
@@ -218,9 +223,18 @@ for kdt = 1:1000   %main loop  --
        %Check for divergence
        if isnan(NomF)
            dt = dt - 0.2*dt
-           clear F G W f g
+           clear F G W f g Fr Gr Wr j NomF
            break
        end
+	   
+	   if (rem(k,250)==0)
+			Fr(:,j)=F(:,2);
+	        Gr(:,j)=G(:,2);
+	        Wr(:,j)=W(:,2);
+            j=j+1;
+	   end
+	   
+			
 	   
 	   
 	   F(:,1)=F(:,2);
@@ -244,3 +258,9 @@ x=0:detta:etta-detta;
 No = strrep(num2str(phi), '.', '_');
 name = sprintf('Data\\%s\\phi%s.mat',NanoParticle,No);
 save(name)
+phi = phi + dphi;
+end
+
+%change log : 
+%while loop for phi
+
