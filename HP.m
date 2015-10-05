@@ -1,11 +1,11 @@
-%Version 1.0   (High Performance Version)
+%Version 1.0   (High Performance)
 
 clear all
 clc
 
 %Global variables 
-dt = 0.0005;
-etta = 10;
+dt = 0.001;
+etta = 9;
 detta = 0.05;
 %----------------
 C = 0.5;
@@ -20,16 +20,32 @@ pCpf = pf * 4179;		%Heat capacitance
 Pr = 1 ;                %Prandtl number 5.78              
 %-----------------NanoParticle----------------------
 
-NanoParticle = 'Cu' ;
-ps =  8933 ;		    %Density  
-Ks = 400;				%Thermal conductivity 
-pCps = ps * 385;		%Heat capacitance   (د?*Cp) 
+NanoParticle = 'Cu' ;		%Valid names : Cu  Al2O3  TiO2 
+
+switch (NanoParticle)
+
+   case 'Cu'
+       ps =  8933 ;		    %Density  
+       Ks = 400;			%Thermal conductivity 
+       pCps = ps * 385;		%Heat capacitance
+   case 'Al2O3'
+       ps =  3970 ;		      
+       Ks = 40;			
+       pCps = ps * 765;		
+   case 'TiO2'
+       ps =  4250 ;		     
+       Ks = 8.9538;			 
+       pCps = ps * 686.2;		
+   otherwise
+	   error('Wrong NanoParticle name.')
+
+end
 
 %------------------NanoFluid------------------------
 
 Knf =( ((Ks+2*Kf)-2*phi*(Kf-Ks))/((Ks+2*Kf)+phi*(Kf-Ks)) ).*Kf;					%Thermal conductivity 
 pCpnf = (1-phi).*(pCpf) + phi .*(pCps) ; 										%Heat capacitance
-anf = Knf / pCpnf ; 															%Effective thermal diffusivity (خ±)
+anf = Knf / pCpnf ; 															%Effective thermal diffusivity 
 
 %---------------------------------------------------
 
