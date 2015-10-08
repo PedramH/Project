@@ -1,8 +1,8 @@
-%Version 1.3   (High Performance)
+%Version 1.2   (High Performance)
 
 clear all
 clc
-
+totalTime=0;
 %Global variables 
 dt = 0.001;
 etta = 5;
@@ -17,7 +17,7 @@ pf = 997.1 ;			%Density
 Kf  = 0.613 ;			%Thermal conductivity 
 pCpf = pf * 4179;		%Heat capacitance 
 Vf = 0.8926e-06;		%Kinematic viscosity (m2/s)
-Pr = 5.64 ;                %Prandtl number 5.78              
+Pr = 6.12 ;             %Prandtl number 6.12              
 %-----------------NanoParticle----------------------
 
 NanoParticle = 'Cu' ;		%Valid names : Cu  Al2O3  TiO2 
@@ -42,7 +42,7 @@ switch (NanoParticle)
 end
 
 dphi = 0.01;   
-MAXphi = 0.21;
+MAXphi = 0.31;
 while (phi <= MAXphi)
 
 
@@ -226,8 +226,13 @@ for kdt = 1:1000   %main loop  --
            clear F G W f g Fr Gr Wr j NomF
            break
        end
-	   
-	   if (rem(k,250)==0)
+       
+       if (k<200 && rem(k,20) == 0)
+            Fr(:,j)=F(:,2);
+	        Gr(:,j)=G(:,2);
+	        Wr(:,j)=W(:,2);
+            j=j+1; 
+       elseif (rem(k,200)==0)
 			Fr(:,j)=F(:,2);
 	        Gr(:,j)=G(:,2);
 	        Wr(:,j)=W(:,2);
@@ -253,6 +258,7 @@ for kdt = 1:1000   %main loop  --
    
 end
 time = toc
+totalTime = totalTime + time;
 x=0:detta:etta-detta;
 %----------------Save Output Data---------------------------
 No = strrep(num2str(phi), '.', '_');
@@ -260,7 +266,7 @@ name = sprintf('Data\\%s\\phi%s.mat',NanoParticle,No);
 save(name)
 phi = phi + dphi;
 end
-
+totalTime
 %change log : 
 %while loop for phi
-
+%changing NomF to NomW
