@@ -17,10 +17,10 @@ pf = 997.1 ;			%Density
 Kf  = 0.613 ;			%Thermal conductivity 
 pCpf = pf * 4179;		%Heat capacitance 
 Vf = 0.8926e-06;		%Kinematic viscosity (m2/s)
-Pr = 6.12 ;             %Prandtl number 6.12              
+Pr = 6.2 ;              %Prandtl number 6.2             
 %-----------------NanoParticle----------------------
 
-NanoParticle = 'Cu' ;		%Valid names : Cu  Al2O3  TiO2 
+NanoParticle = 'TiO2' ;		%Valid names : Cu  Al2O3  TiO2 
 
 switch (NanoParticle)
 
@@ -42,7 +42,7 @@ switch (NanoParticle)
 end
 
 dphi = 0.01;   
-MAXphi = 0.31;
+MAXphi = 0.21;
 while (phi <= MAXphi)
 
 
