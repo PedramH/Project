@@ -11,7 +11,7 @@ NanoParticles = {'Cu','Al2O3','TiO2'};
 
 FileNo = 21;
 n=100;
-j=50;
+j=350;
 
 Fs=zeros(3,n,FileNo);        %Steady state data
 Gs=zeros(3,n,FileNo);
@@ -37,9 +37,11 @@ for in=1:3
         Gs(in,:,m)=G(:,2);
         Ws(in,:,m)=W(:,2);
     
-        Fu(in,:,:,m)=Fr(:,:);
-        Gu(in,:,:,m)=Gr(:,:);
-        Wu(in,:,:,m)=Wr(:,:);
+        
+        
+        Fu(in,:,1:size(Fr,2),m)=Fr(:,:);
+        Gu(in,:,1:size(Gr,2),m)=Gr(:,:);
+        Wu(in,:,1:size(Wr,2),m)=Wr(:,:);
     
         Kn(in,m) = Knf;
     

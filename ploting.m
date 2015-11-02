@@ -21,46 +21,44 @@ if(0)   %RUN?
 titlename = sprintf(' NanoParticle : %s' ,NanoParticle);
 h(1)=figure(1); %F
 plot(x,Fs(in,:,1),...
-    x,Fs(in,:,7),...
+    x,Fs(in,:,6),...
     x,Fs(in,:,11),...
     x,Fs(in,:,21),...
     'LineWidth',2);
 title(titlename,'FontSize',20)
 xlabel('\eta','FontSize',20)
 ylabel('F','FontSize',20);
-h_legend(1) =legend('\phi=0','\phi=0.06','\phi=0.1','\phi=0.2');
+h_legend(1) =legend('\phi=0','\phi=0.05','\phi=0.1','\phi=0.2');
 set(h_legend(1),'FontSize',20);
 set(gca,'fontsize',15)
 name = sprintf('Data\\%s\\figs\\F',NanoParticle);
-print(name,'-djpeg','-r1000')
+print(name,'-djpeg','-r500')
 %-----------------------------------------------------------
 h(2)=figure(2); %G
 plot(x,Gs(in,:,1),...
-    x,Gs(in,:,7),...
+    x,Gs(in,:,6),...
     x,Gs(in,:,11),...
     x,Gs(in,:,21),...
     'LineWidth',2);
 title(titlename,'FontSize',20)
 xlabel('\eta','FontSize',20)
 ylabel('G','FontSize',20);
-h_legend(2)=legend('\phi=0','\phi=0.06','\phi=0.1','\phi=0.2');
+h_legend(2)=legend('\phi=0','\phi=0.05','\phi=0.1','\phi=0.2');
 set(h_legend(2),'FontSize',20);
 name = sprintf('Data\\%s\\figs\\G',NanoParticle);
 print(name,'-djpeg','-r500')
 %------------------------------------------------------------
 h(3)=figure(3); %W
 plot(x,Ws(in,:,1),...
-    x,Ws(in,:,3),...
-    x,Ws(in,:,7),...
+    x,Ws(in,:,6),...
     x,Ws(in,:,11),...
-    x,Ws(in,:,14),...
     x,Ws(in,:,21),...
     'LineWidth',2);
 title(titlename,'FontSize',20)
 xlabel('\eta','FontSize',20)
 ylabel('\theta','FontSize',20);
-h_legend(3)=legend('\phi=0','\phi=0.02','\phi=0.06','\phi=0.1',...
-    '\phi=0.13','\phi=0.2');
+h_legend(3)=legend('\phi=0','\phi=0.05','\phi=0.1',...
+    '\phi=0.2');
 
 set(h_legend(3),'FontSize',20);
 name = sprintf('Data\\%s\\figs\\theta',NanoParticle);
@@ -73,10 +71,14 @@ end
 %%%  Plot F,G & theta with diffrent time and phi           %%%    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if (0) % RUN? 
-
+if (1) % RUN? 
+ clear
+ name = sprintf('Data\\AllData_Old.mat');
+ load(name)
  phi = 0;
+ in = 3 ;  NanoParticle = NanoParticles{in};  
  for i=1:FileNo
+    
     
     %----------------------F---------------------%
     figure(1);
@@ -103,9 +105,9 @@ if (0) % RUN?
     [0.18 0.32]);
    
     % Create Text 
-    text('String','t*',...
+    text('String','t* = 0.02, 0.06, 0.16, 0.6, 1.2, Steady',...
     'Position',[1.72235023041475 0.258982035928144 17.3205080756888],...
-    'FontSize',18);
+    'FontSize',14);
     % Save figure
     print(name,'-djpeg','-r300')
     
@@ -133,9 +135,9 @@ if (0) % RUN?
     [0.18 0.32]);
    
     % Create Text 
-    text('String','t*',...
+    text('String','t* = 0.02, 0.06, 0.16, 0.6, 1.2, Steady',...
     'Position',[1.73387096774194 0.135479041916168 17.3205080756888],...
-    'FontSize',18);
+    'FontSize',14);
     % Save figure
     print(name,'-djpeg','-r300')
     
@@ -150,7 +152,7 @@ if (0) % RUN?
         x,Wu(in,:,8,i),...
         x,Wu(in,:,12,i),...
         x,Wu(in,:,15,i),...
-        x,Ws(in,:,i),'LineWidth',1.2)
+        x,Ws(in,:,i),'LineWidth',2)
     title(titlename,'FontSize',20);
     xlabel('\eta','FontSize',20);
     ylabel('\theta','FontSize',20);
@@ -164,9 +166,9 @@ if (0) % RUN?
     [0.17 0.30]);
    
     % Create Text 
-    text('String','t*',...
+    text('String','t* = 0.02, 0.06, 0.16, 0.6, 1.2, Steady',...
     'Position',[1.16596638655462 0.238911290322581 17.3205080756888],...
-    'FontSize',18);
+    'FontSize',14);
     % Save figure
     print(name,'-djpeg','-r300')   
     
@@ -180,7 +182,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-if (1)   %RUN? 
+if (0)   %RUN? 
     
     Cfx=zeros(3,FileNo); Cfy = zeros(3,FileNo);
     xphi=0:dphi:MAXphi-dphi;
@@ -246,54 +248,74 @@ end
 %%%  Plot Nu and Cf with respect to time                   %%%    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  if (0)   % RUN? 
-    t=0:1:24;
-    t = t*dt;
-    Cfx=zeros(3,25); Cfy = zeros(3,25);Nux=zeros(3,25);Nuy=zeros(3,25);
+    j=300;
+    t=10:1:j-1;
+    t = t*20*dt;
+    Cfx=zeros(3,290); Cfy = zeros(3,290);Nux=zeros(3,290);Nuy=zeros(3,290);
     
-    in = 1 ; % Cu 
-    NanoParticle = NanoParticles{in};
+%     in = 1 ; % Cu 
+%     NanoParticle = NanoParticles{in};
     
     phi = 0;
-    for i=1:FileNo
-        for k = 1:25    
-            dF = (Fu(in,2,k+10,i)-Fu(in,1,k+10,i))/detta;
-            dG = (Gu(in,2,k+10,i)-Gu(in,1,k+10,i))/detta;
-            dW = (Wu(in,2,k+10,i)-Wu(in,1,k+10,i))/detta;
-            Cfx(in,k) = -dF/(1-phi).^(2.5);
-            Cfy(in,k) = -dG/( ((1-phi).^(2.5))*C.^(3/2) );
+    for i=1:FileNo  %Change this 
+        for in = 1:3
+            for k = 1:j-10    
+                dF = (Fu(in,2,k+10,i)-Fu(in,1,k+10,i))/detta;
+                dG = (Gu(in,2,k+10,i)-Gu(in,1,k+10,i))/detta;
+                dW = (Wu(in,2,k+10,i)-Wu(in,1,k+10,i))/detta;
+                Cfx(in,k) = -dF/(1-phi).^(2.5);
+                Cfy(in,k) = -dG/( ((1-phi).^(2.5))*C.^(3/2) );
             
-            Nux(in,k) = -dW * (Knf(in,i)/Kf);
-            Nuy(in,k) = -dW * (Knf(in,i)/(Kf*C.^(1/2)));
+                Nux(in,k) = -dW * (Knf(in,i)/Kf);
+                Nuy(in,k) = -dW * (Knf(in,i)/(Kf*C.^(1/2)));
+            end
         end
+        
+        
+        
+        
+        
+        
         % ------------Cf---------------
         figure(1)
-        plot(t,Cfx(in,:),t,Cfy(in,:),'LineWidth',2)
-        legend({'Re_{x}^{1/2}C_{fx}','Re_{y}^{1/2}C_{fy}'},'FontSize',15);
+        plot(t,Cfx(1,:),'r',t,Cfx(2,:),'g',...
+            t,Cfx(3,:),'b',t,Cfy(1,:),'--r',...
+            t,Cfy(2,:),'--g',t,Cfy(3,:),'--b',...
+            'LineWidth',2)
+        
+        legend({'Cu','Al_{2}O_{3}','TiO_{2}'}...
+            ,'FontSize',15);
         xlabel('t*','FontSize',20)
         ylabel('C_{f}','FontSize',20)
-        phi_str = num2str(phi);
-        titlename = sprintf(' NanoParticle : %s \n\\phi = %s',NanoParticle,phi_str);
-        title(titlename,'FontSize',20)
-        %ylim([-0.2,3.5])
+%         phi_str = num2str(phi);
+%         titlename = sprintf(' NanoParticle : %s \n\\phi = %s',NanoParticle,phi_str);
+%         title('Re_{x}^{1/2}C_{f}','FontSize',20)
+        xlim([0.2,inf])
         
         % save figure 
         No = strrep(num2str(phi), '.', '_');
-        name = sprintf('Data\\%s\\figs\\Cf\\phi%s',NanoParticle,No);
+        name = sprintf('Data\\All\\Cf\\phi%s',No);
         print(name,'-djpeg','-r300')
         
         % ------------Nu---------------
         figure(2)
-        plot(t,Nux(in,:),t,Nuy(in,:),'LineWidth',2)
-        legend({'Re_{x}^{-1/2}Nu_{x}','Re_{y}^{-1/2}Nu_{y}'},'FontSize',15);
+        plot(t,Nux(1,:),'r',t,Nux(2,:),'g',...
+            t,Nux(3,:),'b',t,Nuy(1,:),'--r',...
+            t,Nuy(2,:),'--g',t,Nuy(3,:),'--b',...
+            'LineWidth',2)
+        
+        legend({'Cu','Al_{2}O_{3}','TiO_{2}'}...
+            ,'FontSize',15);
         xlabel('t*','FontSize',20)
         ylabel('Nu','FontSize',20)
-        phi_str = num2str(phi);
-        titlename = sprintf(' NanoParticle : %s \n\\phi = %s',NanoParticle,phi_str);
-        title(titlename,'FontSize',20)
+%         phi_str = num2str(phi);
+%         titlename = sprintf(' NanoParticle : %s \n\\phi = %s',NanoParticle,phi_str);
+%         title(titlename,'FontSize',20)
         %ylim([-0.2,5])
+        xlim([0.2,inf])
         % save figure 
         No = strrep(num2str(phi), '.', '_');
-        name = sprintf('Data\\%s\\figs\\Nu\\phi%s',NanoParticle,No);
+        name = sprintf('Data\\All\\Nu\\phi%s',No);
         print(name,'-djpeg','-r300')
         
         

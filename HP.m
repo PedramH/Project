@@ -75,7 +75,7 @@ for kdt = 1:1000   %main loop  --
     f = zeros(n,1);
 	g = zeros(n,1);
     
-	Fr = zeros(n,50);Gr = zeros(n,50); Wr = zeros(n,50);  j=1;  %for saving unsteady values.
+	Fr = zeros(n,160);Gr = zeros(n,160); Wr = zeros(n,160);  j=1;  %for saving unsteady values.
     
 	nt = 1000000000000;  %No. of iterations
    
@@ -213,7 +213,7 @@ for kdt = 1:1000   %main loop  --
        
        
        
-       NomF = norm((F(:,1)-F(:,2)))/norm(F(:,1))
+       NomF = norm((F(:,1)-F(:,2)))/norm(F(:,1));
        if  NomF < 1e-7 && k > 2000
            disp('Checkpoint 1')
            break
@@ -227,16 +227,16 @@ for kdt = 1:1000   %main loop  --
            break
        end
        
-       if (k<200 && rem(k,20) == 0)
+       if (rem(k,20) == 0 || k==1)
             Fr(:,j)=F(:,2);
 	        Gr(:,j)=G(:,2);
 	        Wr(:,j)=W(:,2);
             j=j+1; 
-       elseif (rem(k,200)==0)
-			Fr(:,j)=F(:,2);
-	        Gr(:,j)=G(:,2);
-	        Wr(:,j)=W(:,2);
-            j=j+1;
+%        elseif (rem(k,200)==0)
+% 			Fr(:,j)=F(:,2);
+% 	        Gr(:,j)=G(:,2);
+% 	        Wr(:,j)=W(:,2);
+%             j=j+1;
 	   end
 	   
 			
